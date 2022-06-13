@@ -88,7 +88,7 @@ summary(ruralpop$CLDm)
 summary(ruralpop$HWHO)
 summary(ruralpop$HWHOm)
 summary(ruralpop$HOSM)
-summary(ruralpop$HWHOm)
+summary(ruralpop$HOSMm)
 summary(ruralpop$BOR)
 summary(ruralpop$PHA)
 summary(ruralpop$SCH)
@@ -568,45 +568,45 @@ n_SCH_adm_iso = NDJpop %>% # Only the origins within the isolation threshold. Th
 ruralpop$BUAdif = ruralpop$BUAm - ruralpop$BUA # Average increase in minutes from baseline to flood scenario.
 r_BUA_dif = ruralpop %>%
   group_by(adm) %>%
-  summarise(BUAdif = weighted.mean(BUAdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(BUAwdif = weighted.mean(BUAdif, val, na.rm=T)) %>% as.data.frame()
 ruralpop$CLDdif = ruralpop$CLDm - ruralpop$CLD 
 r_CLD_dif = ruralpop %>%
   group_by(adm) %>%
-  summarise(CLDdif = weighted.mean(CLDdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(CLDwdif = weighted.mean(CLDdif, val, na.rm=T)) %>% as.data.frame()
 ruralpop$HOSMdif = ruralpop$HOSMm - ruralpop$HOSM 
 r_HOSM_dif = ruralpop %>%
   group_by(adm) %>%
-  summarise(HOSMdif = weighted.mean(HOSMdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(HOSMwdif = weighted.mean(HOSMdif, val, na.rm=T)) %>% as.data.frame()
 ruralpop$HWHOdif = ruralpop$HWHOm - ruralpop$HWHO 
 r_HWHO_dif = ruralpop %>%
   group_by(adm) %>%
-  summarise(HWHOdif = weighted.mean(HWHOdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(HWHOwdif = weighted.mean(HWHOdif, val, na.rm=T)) %>% as.data.frame()
 
 agro$BORdif = agro$BORm - agro$BOR 
 a_BOR_dif = agro %>%
   group_by(adm) %>%
-  summarise(BORdif = weighted.mean(BORdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(BORwdif = weighted.mean(BORdif, val, na.rm=T)) %>% as.data.frame()
 agro$CLDdif = agro$CLDm - agro$CLD 
 a_CLD_dif = agro %>%
   group_by(adm) %>%
-  summarise(CLDdif = weighted.mean(CLDdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(CLDwdif = weighted.mean(CLDdif, val, na.rm=T)) %>% as.data.frame()
 agro$HDUdif = agro$HDUm - agro$HDU
 a_HDU_dif = agro %>%
   group_by(adm) %>%
-  summarise(HDUdif = weighted.mean(HDUdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(HDUwdif = weighted.mean(HDUdif, val, na.rm=T)) %>% as.data.frame()
 
 NDJpop$HOSMdif = NDJpop$HOSMm - NDJpop$HOSM 
 n_HOSM_dif = NDJpop %>%
   group_by(adm) %>%
-  summarise(HOSMdif = weighted.mean(HOSMdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(HOSMwdif = weighted.mean(HOSMdif, val, na.rm=T)) %>% as.data.frame()
 NDJpop$HWHOdif = NDJpop$HWHOm - NDJpop$HWHO 
 n_HWHO_dif = NDJpop %>%
   group_by(adm) %>%
-  summarise(HWHOdif = weighted.mean(HWHOdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(HWHOwdif = weighted.mean(HWHOdif, val, na.rm=T)) %>% as.data.frame()
 NDJpop$MKTdif = NDJpop$MKTm - NDJpop$MKT 
 n_MKT_dif = NDJpop %>%
   group_by(adm) %>%
-  summarise(MKTdif = weighted.mean(MKTdif, val, na.rm=T)) %>% as.data.frame()
+  summarise(MKTwdif = weighted.mean(MKTdif, val, na.rm=T)) %>% as.data.frame()
 
 
 # Combine.
