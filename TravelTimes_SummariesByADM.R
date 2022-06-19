@@ -8,7 +8,6 @@ Packages = c("sf", "rgdal", "tidyverse", "ggplot2", "broom",
 lapply(Packages, library, character.only = TRUE)
 
 
-
 # ------------- LOAD ORIGINS, DESTINATIONS, AND ADMIN AREAS ----------------
 
 adm1 = st_read("TCD_adm1_wpop.shp") # Region-level admin area with population.
@@ -117,14 +116,14 @@ summary(NDJpop$SCH)
 # These will be used to summarize the number of locations, people, and $ isolated in the ADM area.
 r_BUA_isolated = subset(ruralpop, BUA >= 240) # Default isolation in this study is 4 hours or more by car.
 r_CLD_isolated = subset(ruralpop, CLD >= 240)
-r_HWHO_isolated = subset(ruralpop, HWHO >= 240)
-r_HOSM_isolated = subset(ruralpop, HOSM >= 240)
+r_HWHO_isolated = subset(ruralpop, HWHO >= 180)
+r_HOSM_isolated = subset(ruralpop, HOSM >= 180)
 r_PHA_isolated = subset(ruralpop, PHA >= 120) # Cutoff: 2 hours. (walking) Given that pharmacies are essential to treatment in rural areas.
-r_SCH_isolated = subset(ruralpop, SCH >= 60) # Cutoff: 1 hour. (walking) Given that frequency (should be) daily.
+r_SCH_isolated = subset(ruralpop, SCH >= 90) # Cutoff: 1 hour. (walking) Given that frequency (should be) daily.
 r_BUAm_isolated = subset(ruralpop, BUAm >= 240)
 r_CLDm_isolated = subset(ruralpop, CLDm >= 240)
-r_HWHOm_isolated = subset(ruralpop, HWHOm >= 240)
-r_HOSMm_isolated = subset(ruralpop, HOSMm >= 240)
+r_HWHOm_isolated = subset(ruralpop, HWHOm >= 180)
+r_HOSMm_isolated = subset(ruralpop, HOSMm >= 180)
 
 a_HDU_isolated = subset(agro, HDU >= 240) 
 a_CLD_isolated = subset(agro, CLD >= 240)
@@ -143,7 +142,7 @@ n_HWHOm_isolated = subset(NDJpop, HWHOm >= 60)
 n_HOSMm_isolated = subset(NDJpop, HOSMm >= 60)
 
 
-# This will be used farther down to calculate the average travel time for origins which are NOT isolated.
+#This will be used farther down to calculate the average travel time for origins which are NOT isolated.
 ruralpop$BUA_iso = replace(ruralpop$BUA, ruralpop$BUA>=240, NA)
 ruralpop$CLD_iso = replace(ruralpop$CLD, ruralpop$CLD>=240, NA)
 ruralpop$HWHO_iso = replace(ruralpop$HWHO, ruralpop$HWHO>=240, NA)
@@ -745,4 +744,30 @@ st_write(a_all, dsn = file.path(getwd(), 'TravelTimes_AdminSummaries.gpkg'), lay
 n_all = merge(admNDJ, n_all, by="adm", all.x=T)
 st_write(n_all, dsn = file.path(getwd(), 'TravelTimes_AdminSummaries.gpkg'), layer = 'FromNDjamenaGriddedPts', append=F)
 
+r_all_df = r_all %>% st_drop_geometry() # Rows and columns were shifted strangely when writing CSV without this step.
+a_all_df = a_all %>% st_drop_geometry()
+n_all_df = n_all %>% st_drop_geometry()
+write.csv(r_all_df, "FromRuralSettlements.csv")
+write.csv(a_all_df, "FromAgroAreas.csv")
+write.csv(n_all_df, "FromNDjamenaGriddedPts.csv")
 
+# ------------- SUMMARY STATS ----------------
+
+# a_all = st_read(dsn = file.path(getwd(), 'TravelTimes_AdminSummaries.gpkg'), 
+#               layer = 'FromAgroAreas') # Cropland areas, with annual agricultural value
+# n_all = st_read(dsn = file.path(getwd(), 'TravelTimes_AdminSummaries.gpkg'), 
+#               layer = 'FromNDjamenaGriddedPts') # Population grid (WorldPop2020 constrained UN-adj) of greater N'Djamena
+# r_all = st_read(dsn = file.path(getwd(), 'TravelTimes_AdminSummaries.gpkg'), 
+#               layer = 'FromRuralSettlements') # Populated settlements with pop counts derived from the same WorldPop version.
+
+sum(agro$val)
+sum(agro$Area_m) * 0.0001
+sum(a_all$CLDisoVAL) # Agro $$ more than 4 hours from markets, no weather disruption
+sum(a_all$CLDdifVAL) # Additional agro $$ isolated after weather disruption
+
+sum(ruralpop$val)
+sum(r_all$CLDisoVAL)
+sum(r_all$CLDisoCT)
+sum(r_all$CLDdifVAL) + sum(r_all$CLDisoVAL)
+
+(sum(r_all$CLDisoVAL) + sum(r_all$CLDdifVAL)) / sum(ruralpop$val)
